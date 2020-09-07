@@ -1,11 +1,28 @@
 import React, { Component } from "react";
 import "./App.css";
+import Navbar from "./compenents/layout/Navbar";
+import Users from "./compenents/users/Users";
+import axios from "axios";
 
 class App extends Component {
+  state = {
+    users: [],
+    loading: false,
+  };
+  async componentDidMount() {
+    this.setState({ loading: true });
+    const res = await axios.get(
+      `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    this.setState({ loading: false, users: res.data });
+  }
   render() {
     return (
       <div className="App">
-        <h1>Hello World</h1>
+        <Navbar title=" Github finder" icon="fab fa-github" />
+        <div className="container">
+          <Users users={this.state.users} loading={this.state.loading} />
+        </div>
       </div>
     );
   }
