@@ -1,23 +1,19 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import "./App.css";
 import Navbar from "./compenents/layout/Navbar";
 import Users from "./compenents/users/Users";
+import User from "./compenents/users/User";
 import Search from "./compenents/users/Search";
 import axios from "axios";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import about from "./compenents/pages/about";
 
 class App extends Component {
   state = {
     users: [],
+    user: {},
     loading: false,
   };
-  // async componentDidMount() {
-  //   this.setState({ loading: true });
-  //   const res = await axios.get(
-  //     `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-  //   );
-  //   this.setState({ loading: false, users: res.data });
-  // }
-
   // Search github users
   searchUsers = async (text) => {
     this.setState({ loading: true });
@@ -27,25 +23,58 @@ class App extends Component {
     this.setState({ loading: false, users: res.data.items });
   };
 
+  // ? get single github user from github
+  getUser = async (username) => {
+    this.setState({ loading: true });
+    const res = await axios.get(
+      `https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    this.setState({ loading: false, user: res.data });
+  };
+
+  // ? clear users from state
   clearUsers = () => {
     this.setState({ users: [] });
   };
   render() {
-    const { users, loading } = this.state;
+    const { users, loading, user } = this.state;
     return (
-      <div className="App">
-        <Navbar title=" Github finder" icon="fab fa-github" />
-        <Search
-          userslength={users.length}
-          clearUsers={this.clearUsers}
-          searchUsers={this.searchUsers}
-        />
-
-        <div className="container">
-          <Users users={users} loading={loading} />
-          
+      <Router>
+        <div className="App">
+          <Navbar />
+          <div className="container">
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={(props) => (
+                  <Fragment>
+                    <Search
+                      userslength={users.length}
+                      clearUsers={this.clearUsers}
+                      searchUsers={this.searchUsers}
+                    />
+                    <Users users={users} loading={loading} />
+                  </Fragment>
+                )}
+              />
+              <Route exact path="/about" component={about} />
+              <Route
+                exact
+                path="/user/:login"
+                render={(props) => (
+                  <User
+                    {...props}
+                    getUser={this.getUser}
+                    user={user}
+                    loading={loading}
+                  />
+                )}
+              />
+            </Switch>
+          </div>
         </div>
-      </div>
+      </Router>
     );
   }
 }
