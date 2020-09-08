@@ -368,6 +368,10 @@ table th {
   margin: 0 0.25rem;
 }
 
+.githubNavbar {
+  background-color: #2188ff;
+  color: white;
+}
 .navbar a:hover {
   color: var(--light-color);
 }
