@@ -28,7 +28,7 @@ const GithubState = (props) => {
       `https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
     dispatch({
-      type: "SEARCH_USERS",
+      type: SEARCH_USERS,
       //? the reducer is gonna be responsable of putting this into our state and send it down to any component that need it
       payload: res.data.items,
     });

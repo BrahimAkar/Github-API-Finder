@@ -1,9 +1,8 @@
-import React, { Fragment, useState, useHook } from "react";
+import React from "react";
 import "./App.css";
 
 import Navbar from "./compenents/layout/Navbar";
 import User from "./compenents/users/User";
-import axios from "axios";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import about from "./compenents/pages/about";
 import GithubState from "./context/github/GithubState";
@@ -21,7 +20,6 @@ const App = () => {
               <Route exact path="/about" component={about} />
               <Route exact path="/user/:login" component={User} />
               <Route component={NotFound} />
-              
             </Switch>
           </div>
         </div>
